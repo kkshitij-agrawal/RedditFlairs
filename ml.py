@@ -173,24 +173,24 @@ print(a)
 # ======================================================================
 
 # Taking input as link for test case
-	flag = 0
-	while(flag == 0):
-		print("Enter a link: ")
-		link = input()
+flag = 0
+while(flag == 0):
+	print("Enter a link: ")
+	link = input()
 
-		post = reddit.submission(url=link)
-		print(post.title)
+	post = reddit.submission(url=link)
+	print(post.title)
 
-		X_test = vector.transform([post.title])
-		X_test_freq = vectorizer.transform(X_test)
-		predicted = clf.predict(X_test_freq)
-		print(predicted[0])
+	X_test = vector.transform([post.title])
+	X_test_freq = vectorizer.transform(X_test)
+	predicted = clf.predict(X_test_freq)
+	print(predicted[0])
 
-		print("continue? y/n")
-		ans = input()
+	print("continue? y/n")
+	ans = input()
 
-		if ans == "n":
-			flag = 1
+	if ans == "n":
+		flag = 1
 
 
 # ======================================================================
