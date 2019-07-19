@@ -10,6 +10,8 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score
 
+import pymongo
+
 reddit = praw.Reddit(client_id='SvS38h15MT-5sg',\
 						client_secret='Na6q8GiTDknIFbyGoI3AgsX_ajE',\
 						user_agent='precog_kshitij',\
@@ -22,8 +24,9 @@ subreddit = reddit.subreddit('india')
 # print(text.title)
 
 
-
+#==================================================
 #Training Data Set
+
 train_posts = pd.read_csv("train_data.csv",header=0)
 # test_posts = pd.read_csv("test_data.csv",header=0)
 
@@ -118,48 +121,79 @@ for x in predicted:
 acc = accuracy_score(test_data.flair,predicted) #Calculating the accuracy
 print("Accuracy",acc) 
 
-#Taking input as link for test case
-	# flag = 0
-	# while(flag == 0):
-	# 	print("Enter a link: ")
-	# 	link = input()
 
-	# 	post = reddit.submission(url=link)
-	# 	print(post.title)
+# ========================================================================
+#Graph plot to show the score/comments per category.
 
-	# 	X_test = vector.transform([post.title])
-	# 	X_test_freq = vectorizer.transform(X_test)
-	# 	predicted = clf.predict(X_test_freq)
-	# 	print(predicted[0])
-
-	# 	print("continue? y/n")
-	# 	ans = input()
-
-	# 	if ans == "n":
-	# 		flag = 1
+temp = pd.read_csv("data.csv")
+# print(temp)
 
 
+plt.scatter(temp.value,topics_data.score,marker='+',color='red')
+# plt.show()
 
-# df = pd.read_csv("reddit_train.csv")
-# print(df)
 
 # plt.scatter(topics_data.flair,topics_data.score,color='red')
 # plt.scatter(topics_data.flair,topics_data.comments,color='blue')
 
+# ========================================================================
+# Encoding flair to be predicted by comments and upvotes(score) data
 
-#df = topics_data
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+
 dummies = pd.get_dummies(topics_data.flair)
 # print(dummies)
 
 merged = pd.concat([topics_data,dummies],axis='columns')
 
+merged.flair = le.fit_transform(merged.flair)
+
 merged.to_csv('reddit_train.csv',index=False)
 
 final = merged.drop(['flair','Scheduled'],axis='columns')
 
-# model = linear_model.LinearRegression()
-# X = 
+model = linear_model.LogisticRegression(solver='lbfgs', multi_class='auto',max_iter = 2000)
+X = final[['comments']].values
+# y = temp.value
+y = merged[['flair']]
 
+# y = np.reshape(y,(-1,1099))
+# print(y.shape)
+model.fit(X,y.values.ravel())
+
+# x = np.reshape(test_data.comments,(1,-1))
+a = model.predict(test_data[['comments']].values)
+print(a)
+
+# res = le.fit_transform(test_data.flair)
+# print(res.shape)
+# acc2 = model.score(['res'],a)
+
+# ======================================================================
+
+# Taking input as link for test case
+	flag = 0
+	while(flag == 0):
+		print("Enter a link: ")
+		link = input()
+
+		post = reddit.submission(url=link)
+		print(post.title)
+
+		X_test = vector.transform([post.title])
+		X_test_freq = vectorizer.transform(X_test)
+		predicted = clf.predict(X_test_freq)
+		print(predicted[0])
+
+		print("continue? y/n")
+		ans = input()
+
+		if ans == "n":
+			flag = 1
+
+
+# ======================================================================
 
 # reg = linear_model.LinearRegression()
 # reg.fit(topics_data[['score','comments']],topics_data['value'])
