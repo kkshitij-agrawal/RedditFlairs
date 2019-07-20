@@ -1,1 +1,1 @@
-web: python ml --log-file -
+web: python ml.py
