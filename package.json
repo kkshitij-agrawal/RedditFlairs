@@ -1,0 +1,16 @@
+{
+  "name": "yes",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "https://github.com/kkshitij-agrawal/RedditFlairs",
+  "image": "heroku/python",
+   "keywords": ["python" ],
+  "scripts": {
+    "test": "python ml.py test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^5.6.5"
+  }
+}
