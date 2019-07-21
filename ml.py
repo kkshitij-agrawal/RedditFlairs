@@ -96,7 +96,7 @@ for sub in test_posts:
 topics_data = pd.DataFrame(topics_dict) #Created the data frame ie, the data set
 test_data = pd.DataFrame(test_dict)
 
-# topics_data.to_csv('reddit_train.csv',index=False) #store the dataset in csv file
+# test_data.to_csv('test_data.csv',index=False) #store the dataset in csv file
 
 categories = list(topics_data.flair) #Storing all categories in a variable
 # print(categories)
@@ -130,12 +130,12 @@ temp = pd.read_csv("data.csv")
 
 
 plt.scatter(temp.value,topics_data.score,marker='+',color='red')
-# plt.show()
+plt.show()
 
 
-# plt.scatter(topics_data.flair,topics_data.score,color='red')
-# plt.scatter(topics_data.flair,topics_data.comments,color='blue')
-
+plt.scatter(topics_data.flair,topics_data.score,color='red')
+plt.scatter(topics_data.flair,topics_data.comments,color='blue')
+plt.show()
 # ========================================================================
 # Encoding flair to be predicted by comments and upvotes(score) data
 
@@ -154,17 +154,24 @@ merged.to_csv('reddit_train.csv',index=False)
 final = merged.drop(['flair','Scheduled'],axis='columns')
 
 model = linear_model.LogisticRegression(solver='lbfgs', multi_class='auto',max_iter = 2000)
-X = final[['comments']].values
+model2 = linear_model.LogisticRegression(solver='lbfgs', multi_class='auto',max_iter = 2000)
+
+X1 = final[['comments']].values
+X2 = final[['score']].values
 # y = temp.value
 y = merged[['flair']]
 
 # y = np.reshape(y,(-1,1099))
 # print(y.shape)
-model.fit(X,y.values.ravel())
+model.fit(X1,y.values.ravel())
+model2.fit(X2,y.values.ravel())
 
 # x = np.reshape(test_data.comments,(1,-1))
 a = model.predict(test_data[['comments']].values)
 print(a)
+b = model2.predict(test_data[['score']].values)
+print(b)
+
 
 # res = le.fit_transform(test_data.flair)
 # print(res.shape)
@@ -173,24 +180,24 @@ print(a)
 # ======================================================================
 
 # Taking input as link for test case
-# flag = 0
-# while(flag == 0):
-# 	print("Enter a link: ")
-# 	link = input()
+flag = 0
+while(flag == 0):
+	print("Enter a link: ")
+	link = input()
 
-# 	post = reddit.submission(url=link)
-# 	print(post.title)
+	post = reddit.submission(url=link)
+	print(post.title)
 
-# 	X_test = vector.transform([post.title])
-# 	X_test_freq = vectorizer.transform(X_test)
-# 	predicted = clf.predict(X_test_freq)
-# 	print(predicted[0])
+	X_test = vector.transform([post.title])
+	X_test_freq = vectorizer.transform(X_test)
+	predicted = clf.predict(X_test_freq)
+	print(predicted[0])
 
-# 	print("continue? y/n")
-# 	ans = input()
+	print("continue? y/n")
+	ans = input()
 
-# 	if ans == "n":
-# 		flag = 1
+	if ans == "n":
+		flag = 1
 
 
 # ======================================================================
@@ -216,3 +223,8 @@ print(a)
 # # 	# 	plt.scatter(topics_data['score'][s],topics_data['comments'][s],color='blue')
 
 # plt.show()
+
+
+# mongodb = store the csv file
+# take input from there
+# use flask to take input from user and build web application
