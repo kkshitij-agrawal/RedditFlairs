@@ -52,6 +52,7 @@ Finally, I used while loop to continuously take the reddit post **link input fro
 Note:
 I have deployed the app on Heroku but I keep an error in the logs _'at=error code=h10 status=503'_ which i haven't been able to debug yet. In addition, the user input code is yet to be written in flask so that it works with the web-app.
 
+Heroku Link:  https://precogflairs.herokuapp.com/
 # Resources
 
 USING THE REDDIT API FOR DATA
